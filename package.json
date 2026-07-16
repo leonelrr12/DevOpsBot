@@ -1,0 +1,20 @@
+{
+  "name": "devops-bot",
+  "version": "1.0.0",
+  "description": "Agente DevOps para Telegram — monitoreo y control del VPS",
+  "main": "dist/bot.js",
+  "scripts": {
+    "dev": "tsx watch src/bot.ts",
+    "build": "tsc",
+    "start": "node dist/bot.js"
+  },
+  "dependencies": {
+    "grammy": "^1.38.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.0"
+  }
+}
