@@ -7,22 +7,24 @@ const STATE_FILE = "/tmp/devops_bot_state.json";
 // ── Configuración de servicios a monitorear ──
 
 const DOCKER_CONTAINERS = [
+  "agt-contador-db-1",
   "chatbot_backend",
-  "openwa-api",
-  "openwa-dashboard",
   "chatbot_monitor",
+  "comunitaria-db",
   "crmge-api",
+  "crmge-db",
+  "mailer-api",
   "myshopify-frontend",
   "myshopify-backend",
   "myshopify-redis",
   "myshopify-mysql",
-  "agt-contador-db-1",
+  "ollama",
 ];
 
 const PM2_PROCESSES = [
-  "amsestudio",
   "agt-contador-api",
-  "mailer-api",
+  "amsestudio",
+  "comunitaria-app",
   "devops-bot",
 ];
 
@@ -32,6 +34,9 @@ const HTTP_CHECKS: { label: string; url: string; expected: string }[] = [
   { label: "CRM-GE API", url: "http://127.0.0.1:3005/api/health", expected: "200" },
   { label: "contador507.com", url: "https://contador507.com/api/health", expected: "200" },
   { label: "Mailer API", url: "http://127.0.0.1:3004/api/health", expected: "200" },
+  { label: "ac.sosaalcalde.com", url: "https://ac.sosaalcalde.com/login", expected: "200" },
+  { label: "ac.sosaalcalde.com HTTP redirect", url: "http://ac.sosaalcalde.com", expected: "301" },
+  { label: "Accion-Comunitaria API (auth)", url: "http://127.0.0.1:3006/api/agent/chat?message=test", expected: "401" },
 ];
 
 // ── Estado entre chequeos ──
