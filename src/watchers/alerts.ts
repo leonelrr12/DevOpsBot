@@ -18,7 +18,6 @@ const DOCKER_CONTAINERS = [
   "myshopify-backend",
   "myshopify-redis",
   "myshopify-mysql",
-  "ollama",
 ];
 
 const PM2_PROCESSES = [
@@ -27,6 +26,11 @@ const PM2_PROCESSES = [
   "comunitaria-app",
   "devops-bot",
 ];
+
+// Puertos que deben estar escuchando en el host (loopback incluido —
+// un contenedor puede estar "running" con su docker-proxy muerto y el
+// puerto sin escuchar: esto lo detecta)
+const PORTS = [3000, 3001, 3003, 3004, 3005, 3006, 5432, 5433, 5434];
 
 const HTTP_CHECKS: { label: string; url: string; expected: string }[] = [
   { label: "greenenergytechnologie.com", url: "https://greenenergytechnologie.com", expected: "200" },
@@ -127,6 +131,24 @@ function checkHttp(): string[] {
   return down;
 }
 
+function checkPorts(): string[] {
+  const down: string[] = [];
+  try {
+    const out = execSync(`ss -tln 2>/dev/null`, {
+      encoding: "utf-8",
+      timeout: 3000,
+    });
+    for (const port of PORTS) {
+      if (!new RegExp(`:${port}\\b`).test(out)) {
+        down.push(`🔌 Puerto ${port} sin escuchar`);
+      }
+    }
+  } catch {
+    down.push("🔌 No se pudo leer los puertos (ss)");
+  }
+  return down;
+}
+
 function checkResources(): string[] {
   const issues: string[] = [];
 
@@ -186,6 +208,7 @@ export function startWatcher(bot: Bot<any>, chatId: string): void {
       ...checkDocker(),
       ...checkPM2(),
       ...checkHttp(),
+      ...checkPorts(),
       ...checkResources(),
     ];
 
